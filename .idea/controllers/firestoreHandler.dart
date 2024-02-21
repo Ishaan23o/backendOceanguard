@@ -37,6 +37,12 @@ final findDocuments=(String col,String property,dynamic value)async{
   return query;
 };
 
+//Find document using one property
+final findAllDocuments=(String col)async{
+  var query = await Firestore.instance.collection(col).get();
+  return query.toList();
+};
+
 //Find document using multiple properties
 final findDocumentsTwo=(String col,String property1,dynamic value1,String property2,dynamic value2)async{
   var query = await Firestore.instance.collection(col).where(property1,isEqualTo: value1).where(property2,isEqualTo: value2)

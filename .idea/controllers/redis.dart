@@ -5,23 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 final Redis redis = new Redis(RedisOptions(host: 'redis-18738.c1.asia-northeast1-1.gce.cloud.redislabs.com', port: 18738,password:'CG79ISO3JW7peoi0Kf170AdZ2njP8NHV'));
 
-//Add location to our database
-final addRedisGeoLocation =(Map<String,dynamic> data) async {
-  await redis.sendCommand(['GEOADD', 'locations', data['latitude'].toString(), data['longitude'].toString(), data['name']]);
-};
-
-//Add complaint to our database
-final addRedisGeoComplaint =(Map<String,dynamic> data) async {
-  await redis.sendCommand(['GEOADD', 'complaints', data['latitude'].toString(), data['longitude'].toString(), data['complaintID']]);
-};
-
-//Remove complaint from database
-final removeRedisGeoComplaint=(Map<String,dynamic>data)async{
-  await redis.sendCommand([
-    'ZREM','complaints',data['complaintID']
-  ]);
-};
-
 final fetchClosestLocation=(Map<String,dynamic>data)async{
   //Set up redis connection
   final conn = red.RedisConnection();

@@ -10,6 +10,7 @@ import './controllers/user.dart';
 import './controllers/redis.dart';
 import 'dart:typed_data';
 import './controllers/firestoreHandler.dart';
+import './controllers/resolver.dart';
 
 shelf.Handler _corsHandler(shelf.Handler handler) {
   return (shelf.Request request) async {
@@ -30,36 +31,25 @@ shelf.Handler _corsHandler(shelf.Handler handler) {
 
 void main() async {
   var app = Router();
-  Firestore.initialize("oceanguardbackend");
+  Firestore.initialize("oceanguard-5aea0");
   app.post('/addComplaint',addComplaint);
   app.post('/resolveComplaint', resolveComplaint);
   app.get('/viewComplaintsUser', viewComplaintsByUser);
   app.get('/viewComplaintsLocation',viewComplaintsByLocation);
+  app.get('/viewComplaintsResolved',viewComplaintsForResolverResolved);
+  app.get('/viewComplaintsUnresolved',viewComplaintsForResolverUnResolved);
   app.post('/resolveComplaint',resolveComplaint);
   app.post('/resolveComplaints',resolveComplaintAll);
+  app.get('/getUserDetails',getUserDetails);
   app.delete('/deleteComplaint',deleteComplaint);
+  app.get('/getLocations',getLocation);
+  app.post('/changeResolver',changeResolver);//[TODO] change resolver to another location (or deallocate)
+  app.post('/requestResolver',requestResolver); //[TODO]  change resolver's requested location
   var handler = const shelf.Pipeline()
       .addMiddleware(shelf.logRequests())
       .addMiddleware(_corsHandler)
       .addHandler(app);
 
-  var server = await io.serve(handler, 'localhost', 8080);
+  var server = await io.serve(handler, '0.0.0.0', 8080);
   print('Server running on localhost:${server.port}');
 }
-
-
-// app.post('/fileReceive', (shelf.Request request) async {
-// final parameters = <String, dynamic>{
-// await for (final formData in request.multipartFormData)
-// formData.name: await formData.part
-// };
-// dynamic extension = parameters['Handle'].headers;
-// var str=extension['content-disposition'];
-// RegExp regex = RegExp('filename="(.+?)"');
-// String filename = regex.firstMatch(str)?.group(1) ?? '';
-// String fileExt = filename.split('.').last;
-// print(fileExt);
-// final file = File('image.$fileExt');
-// await file.writeAsBytes(await parameters['Handle'].readBytes());
-// return shelf.Response.ok('OK');
-// });

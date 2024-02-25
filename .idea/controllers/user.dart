@@ -78,7 +78,7 @@ final viewComplaintsByUser=(shelf.Request req) async {
 //Find all complaints which have been resolved
 final viewComplaintsByUserResolved=(shelf.Request req) async {
   var queryParams = req.url.queryParameters;
-  var complaints = await findDocumentsTwo('complaints', 'userid', queryParams['user'],'resolved',true);
+  var complaints = await findDocumentsTwo('complaints', 'user', queryParams['user'],'resolved',true);
   return shelf.Response.ok(jsonEncode(complaints.map((element)=> {...element.map,'queryID':element.id}).toList()),
       headers: {'Content-Type': 'application/json'});
 };
@@ -86,7 +86,7 @@ final viewComplaintsByUserResolved=(shelf.Request req) async {
 //Find all complaints which have not been resolved
 final viewComplaintsByUserUnResolved=(shelf.Request req) async {
   var queryParams = req.url.queryParameters;
-  var complaints = await findDocumentsTwo('complaints', 'userid', queryParams['user'],'resolved',false);
+  var complaints = await findDocumentsTwo('complaints', 'user', queryParams['user'],'resolved',false);
   return shelf.Response.ok(jsonEncode(complaints.map((element)=> {...element.map,'queryID':element.id}).toList()),
       headers: {'Content-Type': 'application/json'});
 };
